@@ -1,4 +1,4 @@
-// deepqw: DeepSeek+Qwen 组合，mini-router 真透传
+// deepqwen: DeepSeek+Qwen 组合，mini-router 真透传
 // Haiku→DeepSeek Flash / Sonnet→DeepSeek Pro / Opus→Qwen3.7-Max
 module.exports = async function router(req, config) {
   req.body.model = req.body.model.replace(/\[1m\]$/, '');

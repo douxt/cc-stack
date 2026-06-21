@@ -44,7 +44,7 @@ cp config/secret.template.json config/secret.json
 ./scripts/switch-profile.sh direct deepseek
 
 # mini-router 透传（推荐）
-./scripts/switch-profile.sh deepqw
+./scripts/switch-profile.sh deepqwen
 ```
 
 ### 3. Claude Code 使用
@@ -73,7 +73,7 @@ Claude Code (VSCode / CLI)
     │
     ├─ Haiku → DeepSeek V4 Flash ──► api.deepseek.com/anthropic
     ├─ Sonnet → DeepSeek V4 Pro ───► api.deepseek.com/anthropic
-    └─ Opus → DeepSeek V4 Pro ────► api.deepseek.com/anthropic
+    └─ Opus → Qwen 3.7 Max ──────► dashscope.aliyuncs.com/apps/anthropic
 ```
 
 ---
@@ -82,7 +82,7 @@ Claude Code (VSCode / CLI)
 
 | Profile | 说明 |
 |---------|------|
-| `deepqw` | DeepSeek + Qwen 组合，mini-router 真透传 |
+| `deepqwen` | DeepSeek + Qwen 组合，mini-router 真透传 |
 | `direct deepseek` | 直连 DeepSeek，不走代理 |
 | `direct qwen` | 直连阿里百炼 Qwen |
 | `deepseek` | CCR 全量 DeepSeek 路由 |
@@ -100,7 +100,7 @@ cc-stack/
 │   ├── switch-profile.sh       ← 一键切换路由模式
 │   └── merge-config.py         ← 配置合并工具
 ├── profiles/                   ← 各 Provider 路由配置
-│   ├── deepqw/                 ← DeepSeek+Qwen 透传
+│   ├── deepqwen/                 ← DeepSeek+Qwen 透传
 │   ├── deepseek/               ← DeepSeek CCR 路由
 │   ├── direct/                 ← 直连模式
 │   └── ...
