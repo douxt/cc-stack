@@ -88,7 +88,7 @@ function checkAuth(req) {
 
 const server = http.createServer((req, res) => {
   const _rid = rid(); M.total++; M.active++; const _t0 = Date.now();
-  let _err = '', _up = '', _mod = '', _bin = 0, _bout = 0, _logged = false;
+  let _err = '', _up = '', _mod = '', _bin = 0, _bout = 0, _logged = false, _uUrl = '', _uMethod = '';
   res.setHeader('x-request-id', _rid);
   const _done = () => {
     if (_logged) return;
@@ -101,7 +101,7 @@ const server = http.createServer((req, res) => {
     res.removeListener('finish', _done);
     res.removeListener('close', _done);
     if (req.method === 'GET' && req.url === '/') return;
-    log(_rid, { method: req.method, path: req.url, status: s, ms: Date.now() - _t0, bytesIn: _bin, bytesOut: _bout, upstream: _up, model: _mod, err: _err || undefined });
+    log(_rid, { method: req.method, path: req.url, status: s, ms: Date.now() - _t0, bytesIn: _bin, bytesOut: _bout, upstream: _up, model: _mod, upstreamUrl: _uUrl || undefined, upstreamMethod: _uMethod || undefined, err: _err || undefined });
   };
   res.on('finish', _done);
   res.on('close', _done);
@@ -150,6 +150,8 @@ const server = http.createServer((req, res) => {
       catch { _err = 'invalid_upstream_url'; res.writeHead(500); return res.end('Invalid upstream URL'); }
       const newBody = JSON.stringify(json);
       _bin = Buffer.byteLength(newBody);
+      _uUrl = upstreamUrl.pathname.replace(/\/+$/, '') + req.url;
+      _uMethod = req.method;
 
       const fwdHeaders = {};
       for (const [k, v] of Object.entries(req.headers))
@@ -162,8 +164,8 @@ const server = http.createServer((req, res) => {
       const proxyReq = transport.request({
         hostname: upstreamUrl.hostname,
         port: upstreamUrl.port || (upstreamUrl.protocol === 'https:' ? 443 : 80),
-        path: upstreamUrl.pathname.replace(/\/+$/, '') + '/v1/messages',
-        method: 'POST',
+        path: upstreamUrl.pathname.replace(/\/+$/, '') + req.url,
+        method: req.method,
         headers: fwdHeaders,
         timeout: UPSTREAM_TIMEOUT,
       }, proxyRes => {
